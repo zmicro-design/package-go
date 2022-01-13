@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GO_VERSION=16.5
+GO_VERSION=1.17.6
 GO_BIN=/usr/local/go/bin
 GO_BIN_FILE=/tmp/go.tar.gz
 OS=linux
@@ -39,7 +39,7 @@ echo "Install Go ..."
 echo "Download Go Binary ..."
 # GO_TAR_GZ=https://golang.org/dl/go1.15.7.linux-amd64.tar.gz
 # https://www.runoob.com/go/go-environment.html
-GO_TAR_GZ=https://golang.google.cn/dl/go1.${version}.${OS}-${ARCH}.tar.gz
+GO_TAR_GZ=https://golang.google.cn/dl/go${version}.${OS}-${ARCH}.tar.gz
 # GO_TAR_GZ=https://github.com.cnpmjs.org/golang/go/archive/go1.${GO_VERSION}.tar.gz
 wget -c $GO_TAR_GZ -O $GO_BIN_FILE
 
