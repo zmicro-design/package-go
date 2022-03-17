@@ -1,84 +1,117 @@
 #!/bin/bash
 
-GO_VERSION=1.17.6
-GOBIN=/usr/local/go/bin
-GOBIN_FILE=/tmp/go.tar.gz
-OS=linux
-ARCH=amd64
+GO_SOURCE_GOOGLE=https://golang.google.cn/dl
+GO_SOURCE_QINIU=https://gomirrors.org/dl/go
 
-uname -a | grep "Darwin"
-if [ $? == 0 ]; then
-  OS=darwin
-fi
+help() {
+  echo "Description:"
+  echo " install go"
+}
 
-uname -a | grep "arm"
-if [ $? == 0 ]; then
-  ARCH=arm64
-fi
+core() {
+  GO_VERSION=1.17.6
+  GOBIN=/usr/local/go/bin
+  GOBIN_FILE=/tmp/go.tar.gz
+  OS=linux
+  ARCH=amd64
 
-version=$GO_VERSION
+  uname -a | grep "Darwin"
+  if [ $? == 0 ]; then
+    OS=darwin
+  fi
 
-while getopts v: name; do
-  case $name in
-  v)
-    version=$OPTARG
-    ;;
-  *)
-    log "Invalid args"
-    ;;
-  esac
-done
+  uname -a | grep "arm"
+  if [ $? == 0 ]; then
+    ARCH=arm64
+  fi
 
-which wget >> /dev/null 2>&1
-if [ "$?" != "0" ]; then
-  pm install wget
-fi
+  version=$GO_VERSION
 
-echo "Install Go ..."
+  while getopts v: name; do
+    case $name in
+    v)
+      version=$OPTARG
+      ;;
+    *)
+      log "Invalid args"
+      ;;
+    esac
+  done
 
-echo "Download Go Binary ..."
-# GO_TAR_GZ=https://golang.org/dl/go1.15.7.linux-amd64.tar.gz
-# https://www.runoob.com/go/go-environment.html
-GO_TAR_GZ=https://golang.google.cn/dl/go${version}.${OS}-${ARCH}.tar.gz
-# GO_TAR_GZ=https://github.com.cnpmjs.org/golang/go/archive/go1.${GO_VERSION}.tar.gz
-wget -c $GO_TAR_GZ -O $GOBIN_FILE
-
-echo "Create Bin ..."
-sudo rm -rf /usr/local/go
-sudo tar -C /usr/local -xzf $GOBIN_FILE
-
-echo "Config Env ..."
-export PATH=/usr/local/go/bin:$PATH
-go env -w GO111MODULE=on
-go env -w GOPROXY=https://goproxy.cn,direct
-# go env -w GOBIN=$GOBIN
-
-echo "Clean ..."
-rm -rf $GOBIN_FILE
-
-# Write to SHELL
-if [ -f $HOME/.bashrc ]; then
-  cat $HOME/.bashrc | grep GOBIN >> /dev/null 2>&1
+  which wget >> /dev/null 2>&1
   if [ "$?" != "0" ]; then
-    cat << EOF >> $HOME/.bashrc
+    pm install wget
+  fi
+
+  echo "Install Go ..."
+
+  echo "Download Go Binary ..."
+  # GO_TAR_GZ=https://golang.org/dl/go1.15.7.linux-amd64.tar.gz
+  # https://www.runoob.com/go/go-environment.html
+  GO_TAR_GZ=${GO_SOURCE_GOOGLE}/go${version}.${OS}-${ARCH}.tar.gz
+  # GO_TAR_GZ=https://github.com.cnpmjs.org/golang/go/archive/go1.${GO_VERSION}.tar.gz
+  if [ "$(net::is_google_visitable)" = "false" ]; then
+    GO_TAR_GZ=${GO_SOURCE_QINIU}/go${version}.${OS}-${ARCH}.tar.gz
+  fi
+
+  if [ -n "${FORCE_CN}" ]; then
+    GO_TAR_GZ=${GO_SOURCE_QINIU}/go${version}.${OS}-${ARCH}.tar.gz
+  fi
+
+  if [ -n "${GO_SOURCE}" ]; then
+    GO_TAR_GZ=${GO_SOURCE}/go${version}.${OS}-${ARCH}.tar.gz
+  fi
+
+  wget -c $GO_TAR_GZ -O $GOBIN_FILE
+
+  echo "Create Bin ..."
+  sudo rm -rf /usr/local/go
+  sudo tar -C /usr/local -xzf $GOBIN_FILE
+
+  echo "Config Env ..."
+  export PATH=/usr/local/go/bin:$PATH
+  go env -w GO111MODULE=on
+  go env -w GOPROXY=https://goproxy.cn,direct
+  # go env -w GOBIN=$GOBIN
+
+  echo "Clean ..."
+  rm -rf $GOBIN_FILE
+
+  # Write to SHELL
+  if [ -f $HOME/.bashrc ]; then
+    cat $HOME/.bashrc | grep GOBIN >> /dev/null 2>&1
+    if [ "$?" != "0" ]; then
+      cat << EOF >> $HOME/.bashrc
 
 # GOBIN: ${GOBIN}
 export GOBIN=${GOBIN}
 export PATH=\$GOBIN:\$PATH
 EOF
+    fi
   fi
-fi
 
-if [ -f $HOME/.zshrc ]; then
-  cat $HOME/.zshrc | grep GOBIN >> /dev/null 2>&1
-  if [ "$?" != "0" ]; then
-    cat << EOF >> $HOME/.zshrc
+  if [ -f $HOME/.zshrc ]; then
+    cat $HOME/.zshrc | grep GOBIN >> /dev/null 2>&1
+    if [ "$?" != "0" ]; then
+      cat << EOF >> $HOME/.zshrc
 
 # GOBIN: ${GOBIN}
 export GOBIN=${GOBIN}
 export PATH=\$GOBIN:\$PATH
 EOF
+    fi
   fi
-fi
 
-echo "Install Go Done."
+  echo "Install Go Done."
+}
+
+run() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  core $@
+}
+
+run $@
