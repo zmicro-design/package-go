@@ -1,0 +1,7 @@
+export GO_SOURCE_GOOGLE=https://golang.google.cn/dl
+export GO_SOURCE_QINIU=https://gomirrors.org/dl/go
+
+export GO_VERSION=1.17.6
+export GO_HOME=/usr/local/go
+export GOBIN=$GO_HOME/bin
+export GOBIN_FILE=/tmp/go.tar.gz

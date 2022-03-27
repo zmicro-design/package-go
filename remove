@@ -1,0 +1,26 @@
+#!/bin/bash
+
+
+help() {
+  echo "Description:"
+  echo " remove go"
+}
+
+core() {
+  if [ -d "$GO_HOME" ]; then
+    sudo rm -rf $GO_HOME
+  fi
+
+  log::info "Remove Go Done."
+}
+
+run() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  core $@
+}
+
+run $@
