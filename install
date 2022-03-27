@@ -37,9 +37,9 @@ core() {
     pm install wget
   fi
 
-  echo "Install Go ..."
+  log::info "Install Go ..."
 
-  echo "Download Go Binary ..."
+  log::info "Download Go Binary ..."
   # GO_TAR_GZ=https://golang.org/dl/go1.15.7.linux-amd64.tar.gz
   # https://www.runoob.com/go/go-environment.html
   GO_TAR_GZ=${GO_SOURCE_GOOGLE}/go${version}.${OS}-${ARCH}.tar.gz
@@ -58,17 +58,18 @@ core() {
 
   wget -c $GO_TAR_GZ -O $GOBIN_FILE
 
-  echo "Create Bin ..."
+  log::info "Create Bin ..."
   sudo rm -rf $GO_HOME
   sudo tar -C /usr/local -xzf $GOBIN_FILE
 
-  echo "Config Env ..."
+  log::info "Config Env ..."
   export PATH=$GOBIN:$PATH
   go env -w GO111MODULE=on
   go env -w GOPROXY=https://goproxy.cn,direct
-  # go env -w GOBIN=$GOBIN
+  go env -w GOPATH=$GO_HOME
+  go env -w GOBIN=$GOBIN
 
-  echo "Clean ..."
+  log::info "Clean ..."
   rm -rf $GOBIN_FILE
 
   # Write to SHELL
@@ -77,7 +78,7 @@ core() {
     if [ "$?" != "0" ]; then
       cat << EOF >> $HOME/.bashrc
 
-# GOBIN: ${GOBIN}
+# GOBIN
 export GOBIN=${GOBIN}
 export PATH=\$GOBIN:\$PATH
 EOF
@@ -89,14 +90,14 @@ EOF
     if [ "$?" != "0" ]; then
       cat << EOF >> $HOME/.zshrc
 
-# GOBIN: ${GOBIN}
+# GOBIN
 export GOBIN=${GOBIN}
 export PATH=\$GOBIN:\$PATH
 EOF
     fi
   fi
 
-  echo "Install Go Done."
+  log::success "Install Go Done."
 }
 
 run() {
