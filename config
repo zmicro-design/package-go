@@ -5,3 +5,4 @@ export GO_VERSION=1.17.6
 export GO_HOME=/usr/local/go
 export GOBIN=$GO_HOME/bin
 export GOBIN_FILE=/tmp/go.tar.gz
+export GOPATH=$HOME/.go

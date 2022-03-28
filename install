@@ -66,7 +66,7 @@ core() {
   export PATH=$GOBIN:$PATH
   go env -w GO111MODULE=on
   go env -w GOPROXY=https://goproxy.cn,direct
-  # go env -w GOPATH=$GO_HOME
+  go env -w GOPATH=$GOPATH
   # go env -w GOBIN=$GOBIN
 
   log::info "Clean ..."
@@ -80,7 +80,8 @@ core() {
 
 # GOBIN
 export GOBIN=${GOBIN}
-export PATH=\$GOBIN:\$PATH
+export GOPATH=${GOPATH}
+export PATH=\$GOBIN:\$GOPATH/bin:\$PATH
 EOF
     fi
   fi
@@ -92,7 +93,8 @@ EOF
 
 # GOBIN
 export GOBIN=${GOBIN}
-export PATH=\$GOBIN:\$PATH
+export GOPATH=${GOPATH}
+export PATH=\$GOBIN:\$GOPATH/bin:\$PATH
 EOF
     fi
   fi
