@@ -67,6 +67,8 @@ core() {
   go env -w GO111MODULE=on
   go env -w GOPROXY=https://goproxy.cn,direct
   go env -w GOPATH=$GOPATH
+
+  # Donot set GOBIN, which may cause go install permission into $GOBIN
   # go env -w GOBIN=$GOBIN
 
   log::info "Clean ..."
@@ -79,9 +81,9 @@ core() {
       cat << EOF >> $HOME/.bashrc
 
 # GOBIN
-export GOBIN=${GOBIN}
+export GOHOME=${GO_HOME}
 export GOPATH=${GOPATH}
-export PATH=\$GOBIN:\$GOPATH/bin:\$PATH
+export PATH=\$GOHOME/bin:\$GOPATH/bin:\$PATH
 EOF
     fi
   fi
@@ -92,9 +94,9 @@ EOF
       cat << EOF >> $HOME/.zshrc
 
 # GOBIN
-export GOBIN=${GOBIN}
+export GOHOME=${GO_HOME}
 export GOPATH=${GOPATH}
-export PATH=\$GOBIN:\$GOPATH/bin:\$PATH
+export PATH=\$GOHOME/bin:\$GOPATH/bin:\$PATH
 EOF
     fi
   fi
