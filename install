@@ -2,7 +2,7 @@
 
 help() {
   echo "Usage:"
-  echo "  zmicro package install go"
+  echo "  zmicro package install ${PACKAGE_NAME}"
   echo ""
 }
 
@@ -16,7 +16,7 @@ core() {
 
   pkg::install $version
 
-  log::info "Installed Go $(zgvm current) ..."
+  log::info "Installed ${PACKAGE_NAME} $(zgvm current) ..."
 }
 
 run() {

@@ -2,7 +2,7 @@
 
 help() {
   echo "Usage:"
-  echo "  zmicro package remove go"
+  echo "  zmicro package remove $PACKAGE_NAME"
   echo ""
 }
 

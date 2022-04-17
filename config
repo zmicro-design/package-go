@@ -1,1 +1,2 @@
+export PACKAGE_NAME=go
 export PACKAGE_DEFAULT_PACKAGES=()

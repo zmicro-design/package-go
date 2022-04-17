@@ -2,7 +2,7 @@
 
 help() {
   echo "Usage:"
-  echo "  zmicro package update go"
+  echo "  zmicro package update $PACKAGE_NAME"
   echo ""
 }
 
