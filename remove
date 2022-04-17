@@ -13,11 +13,11 @@ core() {
   fi
   
   # remove link
-  sudo rm /usr/local/node
+  sudo rm /usr/local/${PACKAGE_NAME}
   # remove libs
   sudo rm -rf $ZMICRO_PLUGINS_DATA_PATH/gvm
   # remove home lib
-  sudo rm -rf $HOME/.node
+  sudo rm -rf $HOME/.${PACKAGE_NAME}
 }
 
 run() {
