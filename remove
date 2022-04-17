@@ -1,25 +1,26 @@
 #!/bin/bash
 
-
 help() {
-  echo "Description:"
-  echo " remove go"
+  echo "Usage:"
+  echo "  zmicro package remove go"
+  echo ""
 }
 
 core() {
-  if [ -d "$GO_HOME" ]; then
-    sudo rm -rf $GO_HOME
-  fi
-
-  log::info "Remove Go Done."
-}
-
-run() {
   if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     help
     exit 0
   fi
+  
+  # remove link
+  sudo rm /usr/local/node
+  # remove libs
+  sudo rm -rf $ZMICRO_PLUGINS_DATA_PATH/gvm
+  # remove home lib
+  sudo rm -rf $HOME/.node
+}
 
+run() {
   core $@
 }
 
