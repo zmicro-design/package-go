@@ -91,7 +91,10 @@ pkg::install_packages() {
   #   stackoverflow: https://unix.stackexchange.com/questions/393091/unable-to-use-an-array-as-environment-variable
   config::load_file $PACKAGES_PATH/$PACKAGE_NAME/config
 
-  array::each install_one ${PACKAGE_DEFAULT_PACKAGES[@]} 
+  which go >> /dev/null 2>&1
+  if [ "$?" = "0" ]; then
+    array::each install_one ${PACKAGE_DEFAULT_PACKAGES[@]} 
+  fi
 }
 
 pkg::update() {
