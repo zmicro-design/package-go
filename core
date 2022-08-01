@@ -20,12 +20,8 @@ pkg::dependency_check() {
     fi
   fi
 
-  which zgvm >>/dev/null 2>&1
-  if [ "$?" != "0" ]; then
-    zmicro plugin install gvm
-  else
-    zmicro plugin update gvm
-  fi
+  # install version manager
+  pkg::install_version_manager
 }
 
 pkg::config_profile() {
@@ -39,31 +35,23 @@ pkg::install_version_manager() {
   else
     zmicro plugin update gvm
   fi
-
-  pkg::config_profile
 }
 
 pkg::install() {
   # Depdendency Check
   pkg::dependency_check
 
-  # Config Profile
-  pkg::config_profile
-
-  # Install Version Manager
-  pkg::install_version_manager
-
   # Install Binary
   zgvm install $version
+
+  # Apply Profile
+  pkg::config_profile
 
   # Install Packages
   pkg::install_packages
 }
 
 pkg::install_packages() {
-  # Apply Profile
-  pkg::config_profile
-
   # Bin
   export PATH=$(zgvm bin):$PATH
 
