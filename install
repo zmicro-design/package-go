@@ -29,10 +29,10 @@ while getopts v: name; do
   esac
 done
 
-which wget >> /dev/null 2>&1
-if [ "$?" != "0" ]; then
-  pm install wget
-fi
+# which wget >>/dev/null 2>&1
+# if [ "$?" != "0" ]; then
+#   pm install wget
+# fi
 
 echo "Install Go ..."
 
@@ -41,7 +41,8 @@ echo "Download Go Binary ..."
 # https://www.runoob.com/go/go-environment.html
 GO_TAR_GZ=https://golang.google.cn/dl/go${version}.${OS}-${ARCH}.tar.gz
 # GO_TAR_GZ=https://github.com.cnpmjs.org/golang/go/archive/go1.${GO_VERSION}.tar.gz
-wget -c $GO_TAR_GZ -O $GO_BIN_FILE
+# wget -c $GO_TAR_GZ -O $GO_BIN_FILE
+os::download $GO_BIN_FILE $GO_TAR_GZ
 
 echo "Create Bin ..."
 sudo rm -rf /usr/local/go
@@ -57,9 +58,9 @@ rm -rf $GO_BIN_FILE
 
 # Write to SHELL
 if [ -f $HOME/.bashrc ]; then
-  cat $HOME/.bashrc | grep GO_BIN >> /dev/null 2>&1
+  cat $HOME/.bashrc | grep GO_BIN >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
-    cat << EOF >> $HOME/.bashrc
+    cat <<EOF >>$HOME/.bashrc
 
 # GO_BIN: ${GO_BIN}
 export GO_BIN=${GO_BIN}
@@ -69,9 +70,9 @@ EOF
 fi
 
 if [ -f $HOME/.zshrc ]; then
-  cat $HOME/.zshrc | grep GO_BIN >> /dev/null 2>&1
+  cat $HOME/.zshrc | grep GO_BIN >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
-    cat << EOF >> $HOME/.zshrc
+    cat <<EOF >>$HOME/.zshrc
 
 # GO_BIN: ${GO_BIN}
 export GO_BIN=${GO_BIN}
